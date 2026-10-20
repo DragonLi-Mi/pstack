@@ -1,7 +1,9 @@
 ---
 name: poteto-mode
-description: poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.
-disable-model-invocation: true
+description: "Use only when the user explicitly invokes /poteto-mode, /pstack:poteto-mode, or asks for poteto's style. Never auto-select for ordinary coding tasks. Provides concise responses, deliberate subagents, simple code, and verified work."
+# Copilot CLI 1.0.100 compatibility: true also blocks explicit/redundant skill-tool loads.
+# Keep the explicit-user-only trigger above; permit the loader to resolve this skill.
+disable-model-invocation: false
 icon: crown
 color: yellow
 ---

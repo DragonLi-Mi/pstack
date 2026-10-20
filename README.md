@@ -17,6 +17,10 @@ npx skills add backnotprop/pstack
 
 The CLI shows every skill in a list you can search. Select the skills you want, then select your agents.
 
+### GitHub Copilot CLI compatibility branch
+
+This fork's `copilot-cli-compat` branch includes a focused compatibility patch for Copilot CLI 1.0.100. Register the complete `skills/` directory as standalone skills and invoke `/poteto-mode`, without a plugin prefix. See [the Copilot CLI guide](docs/harness/copilot-cli.md) for installation, the reproduced failure modes, validation scope, and the manual-invocation tradeoff.
+
 ## Skills
 
 These skills don't call other pstack skills, so each one works alone:

@@ -1,7 +1,7 @@
 ---
 name: principle-type-system-discipline
-description: "Apply when designing types, reviewing a function signature, or writing code in any statically-typed language. Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, exhaust variants, derive from authoritative schemas."
-disable-model-invocation: true
+description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Apply when designing types, reviewing a function signature, or writing code in any statically-typed language. Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, exhaust variants, derive from authoritative schemas."
+disable-model-invocation: false
 ---
 
 # Type System Discipline

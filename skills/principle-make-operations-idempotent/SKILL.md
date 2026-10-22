@@ -1,7 +1,7 @@
 ---
 name: principle-make-operations-idempotent
-description: "Apply when designing commands, lifecycle steps, or processing loops that run amid crashes, restarts, and retries. Converge to the same end state regardless of partial prior runs."
-disable-model-invocation: true
+description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Apply when designing commands, lifecycle steps, or processing loops that run amid crashes, restarts, and retries. Converge to the same end state regardless of partial prior runs."
+disable-model-invocation: false
 ---
 
 # Make Operations Idempotent

@@ -1,7 +1,7 @@
 ---
 name: no-comments
-description: "Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints."
-disable-model-invocation: true
+description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Spawn Comment Sicko, fix accepted findings, and offer encodings for claimed constraints."
+disable-model-invocation: false
 ---
 
 # No comments

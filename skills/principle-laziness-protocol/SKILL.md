@@ -1,7 +1,7 @@
 ---
 name: principle-laziness-protocol
-description: "Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Bias toward deletion and the smallest change that solves the problem."
-disable-model-invocation: true
+description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Apply when refactoring, evaluating diff size, or tempted to add abstractions, layers, or signal threading. Bias toward deletion and the smallest change that solves the problem."
+disable-model-invocation: false
 ---
 
 # Laziness Protocol

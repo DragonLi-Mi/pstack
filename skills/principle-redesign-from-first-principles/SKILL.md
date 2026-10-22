@@ -1,7 +1,7 @@
 ---
 name: principle-redesign-from-first-principles
-description: "Apply when integrating a new requirement into an existing design."
-disable-model-invocation: true
+description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Apply when integrating a new requirement into an existing design."
+disable-model-invocation: false
 ---
 
 # Redesign From First Principles

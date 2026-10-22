@@ -831,16 +831,16 @@ test("statechart.mjs names the chart it refuses and the argument it does not kno
     unknown.stderr,
     "unknown argument --fixed. Run node statechart.mjs from-chart --help for the flags, the output, and the exit codes.\n",
   );
-  const sameName = node("statechart.mjs", ["from-spec", "C.tla", "--fixed", "fix/C.tla"], dir);
+  const sameName = node("statechart.mjs", ["from-spec", "C.tla", "--fixed", join("fix", "C.tla")], dir);
   assert.equal(sameName.status, 2);
   assert.equal(
     sameName.stderr,
-    "fix/C.tla needs its own file and module name, such as CFixed.tla.\n",
+    `${join("fix", "C.tla")} needs its own file and module name, such as CFixed.tla.\n`,
   );
-  const sameAgreed = node("statechart.mjs", ["from-spec", "C.tla", "--against", "a/C.tla"], dir);
+  const sameAgreed = node("statechart.mjs", ["from-spec", "C.tla", "--against", join("a", "C.tla")], dir);
   assert.equal(
     sameAgreed.stderr,
-    "a/C.tla needs its own file and module name, such as CAgreed.tla.\n",
+    `${join("a", "C.tla")} needs its own file and module name, such as CAgreed.tla.\n`,
   );
   for (const [extra, stderr] of [
     [

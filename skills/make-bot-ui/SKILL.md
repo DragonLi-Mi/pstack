@@ -1,10 +1,11 @@
 ---
 name: make-bot-ui
 description: >-
+  Use only when the user explicitly requests this skill or an active pstack skill routes here.
   Use when building a custom UI (page, dashboard, buttons) that should wake a
   Grok Bot over a webhook, when the user must provide a webhook sender key, or
   when exposing that UI on Tailscale.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 # How to make a bot UI
 

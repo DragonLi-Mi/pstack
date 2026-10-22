@@ -19,7 +19,7 @@ The CLI shows every skill in a list you can search. Select the skills you want, 
 
 ### GitHub Copilot CLI compatibility branch
 
-This fork's `copilot-cli-compat` branch includes a focused compatibility patch for Copilot CLI 1.0.100. Register the complete `skills/` directory as standalone skills and invoke `/poteto-mode`, without a plugin prefix. See [the Copilot CLI guide](docs/harness/copilot-cli.md) for installation, the reproduced failure modes, validation scope, and the manual-invocation tradeoff.
+This fork's `copilot-cli-compat` branch includes a skill-loading compatibility patch verified on Copilot CLI 1.0.100 and 1.0.102. It tracks pstack 0.15.30 and covers every bundled skill, including `/poteto-help` and `/statechart`. Register the complete `skills/` directory as standalone skills and use bare command names, without a plugin prefix. See [the Copilot CLI guide](docs/harness/copilot-cli.md) for installation, the loader regression check, validation scope, and the manual-invocation tradeoff.
 
 ## Skills
 

@@ -2,10 +2,11 @@
 
 This repo mirrors [`cursor/plugins/pstack`](https://github.com/cursor/plugins/tree/main/pstack) and adds its own edits: the top of `README.md` and harness-neutral rewrites in some skills.
 
-Two branches keep those edits safe:
+Three branches keep those edits safe:
 
 - `upstream` holds Cursor's files exactly, with no local edits.
 - `main` is `upstream` plus this mirror's edits.
+- `copilot-cli-compat` keeps the mirror's edits and adds the Copilot skill-loader workaround. Merge `upstream` into it separately; never copy its compatibility metadata back onto `upstream`.
 
 Never copy Cursor's files onto `main` directly. That erases the edits.
 
@@ -45,3 +46,9 @@ Never copy Cursor's files onto `main` directly. That erases the edits.
    ```bash
    git push origin main upstream
    ```
+
+## Copilot compatibility branch
+
+After updating `upstream`, merge it into `copilot-cli-compat` without replacing the existing mirror edits. Apply the metadata workaround described in [the Copilot guide](docs/harness/copilot-cli.md) to any new manual-only skills. Keep their workflow bodies unchanged and leave `setup-pstack`'s automatic trigger intact.
+
+Run `scripts/check-copilot-skills.mjs` with the SDK bundled with the Copilot version being checked. It discovers every bundled skill, so a newly added skill with the incompatible flag fails the check. Keep the upstream synchronization and compatibility changes in separate commits, then push `upstream` and `copilot-cli-compat`.

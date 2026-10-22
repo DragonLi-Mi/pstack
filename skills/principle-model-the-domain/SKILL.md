@@ -1,7 +1,7 @@
 ---
 name: principle-model-the-domain
-description: "Apply when writing stateful logic, or when code branches a lot or repeats a shape assumption across files."
-disable-model-invocation: true
+description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Apply when writing stateful logic, or when code branches a lot or repeats a shape assumption across files."
+disable-model-invocation: false
 ---
 
 # Model the Domain

@@ -1,12 +1,12 @@
 # pstack in GitHub Copilot CLI
 
-This fork's `copilot-cli-compat` branch carries a narrow compatibility patch for **Copilot CLI 1.0.100**, based on `backnotprop/pstack` commit `0c3333f09655d7933919795fbf4f9946d62b6f77` (pstack 0.15.28).
+This fork's `copilot-cli-compat` branch carries a skill-loading compatibility patch verified on **Copilot CLI 1.0.100 and 1.0.102**. It preserves the standalone mirror's harness-neutral edits and synchronizes Cursor's `pstack/` at commit `eb4db2b55b2b7dec3d9282754cddf0a56bf4ff10` (pstack 0.15.30). The `upstream` branch holds that subtree unchanged; compatibility changes stay on `copilot-cli-compat`.
 
 The patch addresses skill loading. It does not implement a new agent runtime or guarantee compatibility with every pstack workflow.
 
 ## Why this branch exists
 
-Two separate failure modes were reproduced using a real Copilot session with only the `skill` tool available:
+Two separate failure modes were originally reproduced on 1.0.100 using a real Copilot session with only the `skill` tool available:
 
 | Installation and metadata | Skill-tool request | Observed result |
 | --- | --- | --- |
@@ -17,6 +17,8 @@ Two separate failure modes were reproduced using a real Copilot session with onl
 | Standalone skills, patched metadata | `poteto-mode` | Success |
 
 A user-invoked plugin slash command can expand successfully and still be followed by a failing, redundant model-tool lookup. Skill discovery, slash-command expansion, and model-tool lookup are different boundaries.
+
+On 1.0.102, `/poteto-help` reproduced that redundant lookup failure even though its content had already loaded. The previous patch covered only `poteto-mode`. An all-skills check against pstack 0.15.30 reproduced the same failure for **55 of 57 skills**, including the new `statechart`; only `poteto-mode` and `setup-pstack` loaded through the skill tool. After the metadata repair, all 57 bare slash commands expand and all 57 redundant skill-tool lookups succeed.
 
 Related upstream reports:
 - https://github.com/github/copilot-cli/issues/4438
@@ -51,6 +53,7 @@ Start a new session and select the bare commands:
 
 ```text
 /poteto-mode your task
+/poteto-help your question
 /setup-pstack
 ```
 
@@ -60,11 +63,13 @@ Do not use `/pstack:poteto-mode` with this standalone registration. An already-r
 
 ## Metadata change and its tradeoff
 
-Only the `poteto-mode` frontmatter is changed:
+Every bundled skill whose frontmatter used `disable-model-invocation: true` receives the same repair:
 
 - Set `disable-model-invocation: false`, so a model-tool lookup is not filtered out.
-- Restrict the description to explicit user requests for poteto-mode.
-- Leave the workflow body and the other skills' metadata unchanged.
+- Restrict its description to an explicit user request for that skill or routing from an active pstack skill. This keeps composed workflows such as `teach` routing to `how` and `why` available.
+- Leave the workflow body and other metadata unchanged.
+
+The earlier `poteto-mode` patch retains its explicit-user-only description. `setup-pstack` already permits model invocation and keeps its natural-language setup trigger. Principles receive the same loader repair as other manual-only skills; they should not activate independently for ordinary tasks.
 
 **The explicit-user-only behavior is now an instruction, not a runtime-enforced exclusion.** A model may still select the skill incorrectly. This patch does not provide the same hard manual-only gate as the original flag. Review this exception when upgrading Copilot; restore the original flag if the underlying lookup behavior is fixed and verified.
 
@@ -89,6 +94,24 @@ The local repair was checked at these boundaries:
 
 The live loader probe exposed only the skill tool, disabled hooks and unrelated plugins in its isolated repository, and requested no coding, setup, or delegation. These were **ad-hoc loader checks, not a full coding-workflow test suite**. No raw conversation traces, local account paths, or credentials are included in this repository.
 
+### Repeatable all-skills check on 1.0.102
+
+Run the checked-in regression script with the `index.js` from the SDK bundled with the installed CLI version and the path to the matching Copilot executable:
+
+```text
+node scripts/check-copilot-skills.mjs <path-to-copilot-sdk/index.js> <path-to-copilot>
+```
+
+For the standard Windows 1.0.102 package location, in PowerShell:
+
+```powershell
+node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64\1.0.102\copilot-sdk\index.js" (Get-Command copilot).Source
+```
+
+The script creates a temporary SDK configuration, discovers every bundled skill, expands each bare slash command, and executes the real `skill` tool after that expansion. It checks the complete slash-expansion body and the tool's success, returned skill identity, and workflow heading. Tool-returned content remains subject to normal CLI redaction, including credential examples in `make-bot-ui`; the check does not disable or bypass redaction. It exposes only the skill tool, rejects permission requests, loads no repository configuration or file hooks, sends no inference prompts, and removes its temporary state. It does not register skills globally or change the user's plugins, authentication, or approval settings.
+
+Before the repair, this check reported 57 slash expansions and 55 loader failures. After the repair, it reported 57 slash expansions and zero loader failures. Workflow bodies were also compared with the post-sync baseline, normalizing Git checkout line endings. These are loader regressions, not proof that every workflow, model selection, or external tool works.
+
 For a manual check after installation:
 
 ```text
@@ -97,6 +120,14 @@ change files, delegate work, or execute the workflow. Report the actual tool res
 ```
 
 Verify the real tool result rather than only the model's prose. Separately check `/poteto-mode` in the session command menu. A successful loader check does not establish coding correctness.
+
+The synchronized `statechart` scripts also have a Node test suite:
+
+```powershell
+node --test .\skills\statechart\scripts\test\statechart.test.mjs
+```
+
+The compatibility branch uses host-native paths in two diagnostic assertions so they match Windows as well as POSIX. TLC-dependent cases require the upstream suite's external prerequisites and otherwise skip.
 
 ## Known limitations
 

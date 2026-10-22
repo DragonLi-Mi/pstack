@@ -1,7 +1,7 @@
 ---
 name: sharpen
-description: "Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen."
-disable-model-invocation: true
+description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Make a task deeper, not bigger, then rewrite the prompt. Use for /sharpen."
+disable-model-invocation: false
 ---
 
 I want a deeper version of this task, not a bigger one. Before rewriting it, do four things:

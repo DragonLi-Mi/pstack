@@ -2,10 +2,11 @@
 # pstack — standalone mirror
 
 > **Mirror** of [`cursor/plugins/pstack`](https://github.com/cursor/plugins/tree/main/pstack) — kept in sync for standalone use.
-> Works in Claude Code, Codex, Pi, and other agents, not only Cursor.
-> See also [`backnotprop/bro`](https://github.com/backnotprop/bro), referenced by the [`/bro`](./skills/bro/SKILL.md) skill.
+> 
+> Sponsored by [Plannotator](https://github.com/backnotprop/plannotator)
+> Try [Plannotator Inbox](https://plannotator.ai/inbox/) today
 
-Cursor's original README is [further down this page](#pstack).
+Poteto's Bro Skill was created by me, [backnotprop/bro](https://github.com/backnotprop/bro)
 
 ## Install
 
@@ -18,6 +19,8 @@ npx skills add backnotprop/pstack
 The CLI shows every skill in a list you can search. Select the skills you want, then select your agents.
 
 ## Skills
+
+Cursor's original README is [further down this page](#pstack).
 
 These skills don't call other pstack skills, so each one works alone:
 

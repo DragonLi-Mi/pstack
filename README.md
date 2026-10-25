@@ -1,12 +1,31 @@
 <!-- mirror:start — this top section is specific to the mirror. Everything after mirror:end is the upstream README from cursor/plugins/pstack, unchanged. To sync with upstream, follow MIRROR.md. -->
-# pstack — standalone mirror
+<h1 align="center">
+  <a href="https://github.com/cursor/plugins/tree/main/pstack">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="mirror-assets/header-dark.svg">
+      <img src="mirror-assets/header-light.svg" width="100%" alt="pstack — standalone mirror. cursor/plugins/pstack is kept in sync with this mirror, backnotprop/pstack. npx skills add backnotprop/pstack installs it into Claude Code, Codex, Pi, Cursor, OpenCode, and other agents.">
+    </picture>
+  </a>
+</h1>
 
-> **Mirror** of [`cursor/plugins/pstack`](https://github.com/cursor/plugins/tree/main/pstack) — kept in sync for standalone use.
-> 
-> Sponsored by [Plannotator](https://github.com/backnotprop/plannotator)
-> Try [Plannotator Inbox](https://plannotator.ai/inbox/) today
+<p align="center">
+  <b>Mirror</b> of <a href="https://github.com/cursor/plugins/tree/main/pstack"><code>cursor/plugins/pstack</code></a> — kept in sync for standalone use.
+</p>
 
-Poteto's Bro Skill was created by me, [backnotprop/bro](https://github.com/backnotprop/bro)
+<p align="center">
+  <a href="https://github.com/backnotprop/plannotator"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="mirror-assets/sponsor-plannotator-dark.svg">
+    <img src="mirror-assets/sponsor-plannotator-light.svg" width="48%" alt="Sponsored by Plannotator">
+  </picture></a>
+  <a href="https://plannotator.ai/inbox/"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="mirror-assets/sponsor-inbox-dark.svg">
+    <img src="mirror-assets/sponsor-inbox-light.svg" width="48%" alt="Try Plannotator Inbox today">
+  </picture></a>
+</p>
+
+<p align="center">
+  Poteto's Bro Skill was created by me, <a href="https://github.com/backnotprop/bro">backnotprop/bro</a>
+</p>
 
 ## Install
 

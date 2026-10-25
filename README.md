@@ -2,10 +2,6 @@
 <h1 align="center">pstack — standalone mirror</h1>
 
 <p align="center">
-  Agent Skills from Cursor's pstack for Claude Code, Codex, Pi, OpenCode, and other agents.
-</p>
-
-<p align="center">
   <a href="https://github.com/cursor/plugins/tree/main/pstack">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="mirror-assets/header-dark.svg">

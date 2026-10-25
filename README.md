@@ -1,12 +1,18 @@
 <!-- mirror:start — this top section is specific to the mirror. Everything after mirror:end is the upstream README from cursor/plugins/pstack, unchanged. To sync with upstream, follow MIRROR.md. -->
-<h1 align="center">
+<h1 align="center">pstack — standalone mirror</h1>
+
+<p align="center">
+  Agent Skills from Cursor's pstack for Claude Code, Codex, Pi, OpenCode, and other agents.
+</p>
+
+<p align="center">
   <a href="https://github.com/cursor/plugins/tree/main/pstack">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="mirror-assets/header-dark.svg">
-      <img src="mirror-assets/header-light.svg" width="100%" alt="pstack — standalone mirror. cursor/plugins/pstack is kept in sync with this mirror, backnotprop/pstack. npx skills add backnotprop/pstack installs it into Claude Code, Codex, Pi, Cursor, OpenCode, and other agents.">
+      <img src="mirror-assets/header-light.svg" width="100%" alt="cursor/plugins/pstack is kept in sync with this mirror, backnotprop/pstack. npx skills add backnotprop/pstack installs it into Claude Code, Codex, Pi, Cursor, OpenCode, and other agents.">
     </picture>
   </a>
-</h1>
+</p>
 
 <p align="center">
   <b>Mirror</b> of <a href="https://github.com/cursor/plugins/tree/main/pstack"><code>cursor/plugins/pstack</code></a> — kept in sync for standalone use.

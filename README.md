@@ -72,6 +72,11 @@ Skills that spawn subagents point to the Subagents section of `poteto-mode` to p
 ## What this mirror changes
 
 Many skills were Cursor-specific. They've been rewritten to work in any harness.
+
+The mirror also carries two community fixes that aren't upstream yet:
+
+- `no-comments` keeps a comment about an outside rule (a dependency, platform, or protocol) when it can't check the rule, and marks it for review instead of deleting it. A rejected review no longer stops the whole run. ([#14](https://github.com/backnotprop/pstack/issues/14))
+- The orchestrate scripts take `--base <branch>` for PR stacks that don't start at `main`. ([#15](https://github.com/backnotprop/pstack/pull/15))
 <!-- mirror:end -->
 
 ---

@@ -71,7 +71,7 @@ The qualifiers do real work. "don't change anything yet" keeps it read-only, and
 ## Fix a bug through a failing test
 
 ```text
-/poteto-mode repro the duplicate write first. if there's a cheap test path, /tdd it. then fix and rerun.
+/poteto-mode repro the duplicate write first. if there's a cheap test path, /pstack-tdd it. then fix and rerun.
 ```
 
 "if there's a cheap test path" matters. Forcing a test through brittle mocks proves less than running the real command, and the playbook is allowed to say so.

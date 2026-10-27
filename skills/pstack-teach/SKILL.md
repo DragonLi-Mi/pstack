@@ -1,6 +1,6 @@
 ---
-name: teach
-description: "Use only when the user explicitly requests this skill or an active pstack skill routes here. Explain a body of work plainly so a person actually understands it. Runs the `how` and `why` skills and weaves what they find into one clear explanation. Use for 'teach me this', 'help me really understand X', 'explain this change or subsystem to me'."
+name: pstack-teach
+description: "Use only when the user explicitly invokes /pstack-teach or an active pstack skill routes here. Explain a body of work plainly so a person actually understands it. Runs the `how` and `why` skills and weaves what they find into one clear explanation. Use for 'teach me this', 'help me really understand X', 'explain this change or subsystem to me'."
 disable-model-invocation: false
 ---
 

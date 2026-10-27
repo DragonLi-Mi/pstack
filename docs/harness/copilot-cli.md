@@ -66,7 +66,7 @@ Do not use `/pstack:poteto-mode` with this standalone registration. An already-r
 Every bundled skill whose frontmatter used `disable-model-invocation: true` receives the same repair:
 
 - Set `disable-model-invocation: false`, so a model-tool lookup is not filtered out.
-- Restrict its description to an explicit user request for that skill or routing from an active pstack skill. This keeps composed workflows such as `teach` routing to `how` and `why` available.
+- Restrict its description to an explicit user request for that skill or routing from an active pstack skill. This keeps composed workflows such as `pstack-teach` routing to `how` and `why` available.
 - Leave the workflow body and other metadata unchanged.
 
 The earlier `poteto-mode` patch retains its explicit-user-only description. `setup-pstack` already permits model invocation and keeps its natural-language setup trigger. Principles receive the same loader repair as other manual-only skills; they should not activate independently for ordinary tasks.
@@ -83,6 +83,14 @@ Use only models and effort fields actually accepted by the current subagent tool
 
 A plain skills-directory installation does not register `agents/*.md` as custom agent types. If `poteto-agent` is unavailable, follow the mirror's Harness fallback: use an available general agent and require it to read the absolute path to `skills/poteto-mode/SKILL.md` in full, including its Principles, before doing the task. This is instruction-level adaptation, not proof that a custom agent type was registered.
 
+## Avoiding duplicate skill names
+
+Standalone skills share a name catalog with installed plugin skills. On Copilot CLI 1.0.104, Matt Pocock's plugin registered `tdd` and `teach` before pstack, so Copilot skipped pstack's versions and printed duplicate-name warnings. That is source precedence, not an installation failure; reloading the same names cannot resolve it.
+
+This branch uses `/pstack-tdd` and `/pstack-teach`, with matching skill directories and updated pstack routing and examples. Other plugins retain `/tdd` and `/teach`. Both implementations stay available without disabling a plugin, changing its priority, or hiding the warnings. These are plain unique names, not the unsupported `pstack:` plugin namespace.
+
+Existing installations should fast-forward to this branch and reload skills or start a fresh CLI session. Do not retain copies in the old `skills/tdd/` and `skills/teach/` directories alongside the renamed skills.
+
 ## Validation performed
 
 The local repair was checked at these boundaries:
@@ -94,7 +102,7 @@ The local repair was checked at these boundaries:
 
 The live loader probe exposed only the skill tool, disabled hooks and unrelated plugins in its isolated repository, and requested no coding, setup, or delegation. These were **ad-hoc loader checks, not a full coding-workflow test suite**. No raw conversation traces, local account paths, or credentials are included in this repository.
 
-### Repeatable all-skills check on 1.0.102
+### Repeatable all-skills and collision check
 
 Run the checked-in regression script with the `index.js` from the SDK bundled with the installed CLI version and the path to the matching Copilot executable:
 
@@ -109,6 +117,8 @@ node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64
 ```
 
 The script creates a temporary SDK configuration, discovers every bundled skill, expands each bare slash command, and executes the real `skill` tool after that expansion. It checks the complete slash-expansion body and the tool's success, returned skill identity, and workflow heading. Tool-returned content remains subject to normal CLI redaction, including credential examples in `make-bot-ui`; the check does not disable or bypass redaction. It exposes only the skill tool, rejects permission requests, loads no repository configuration or file hooks, sends no inference prompts, and removes its temporary state. It does not register skills globally or change the user's plugins, authentication, or approval settings.
+
+The check also registers fixture skills named `tdd` and `teach` in a second source. It verifies those implementations still load from their own files while all 57 pstack skills expand and load from pstack. Before the collision repair, the real loader resolved a pstack request to the competing `tdd` workflow and the assertion failed. This covers source collisions without depending on which plugins happen to be installed.
 
 Before the repair, this check reported 57 slash expansions and 55 loader failures. After the repair, it reported 57 slash expansions and zero loader failures. Workflow bodies were also compared with the post-sync baseline, normalizing Git checkout line endings. These are loader regressions, not proof that every workflow, model selection, or external tool works.
 
@@ -131,7 +141,7 @@ The compatibility branch uses host-native paths in two diagnostic assertions so 
 
 ## Known limitations
 
-- Other enabled packs can supply the same names, such as `tdd` and `teach`; inspect discovery warnings and resolve the intended source. Do not silently disable unrelated packs.
+- Other enabled packs can still collide with unprefixed pstack names beyond the repaired `tdd` and `teach` cases; inspect discovery warnings and resolve the intended source. Do not silently disable unrelated packs.
 - Copilot-specific transcript paths and every pstack delegation path have not been validated by this patch.
 - Current sessions can retain stale catalogs. Avoid restarting while delegates have in-flight work.
 - Keep this compatibility commit separate from upstream synchronization. Review conflicts rather than blindly overwriting local changes with the upstream files.

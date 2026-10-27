@@ -51,4 +51,6 @@ Never copy Cursor's files onto `main` directly. That erases the edits.
 
 After updating `upstream`, merge it into `copilot-cli-compat` without replacing the existing mirror edits. Apply the metadata workaround described in [the Copilot guide](docs/harness/copilot-cli.md) to any new manual-only skills. Keep their workflow bodies unchanged and leave `setup-pstack`'s automatic trigger intact.
 
+This branch names pstack's `tdd` and `teach` skills `pstack-tdd` and `pstack-teach` so other packs can retain the short names. Keep the matching directory names and pstack routing, examples, and links synchronized. Preserve these renames during an upstream merge; do not restore duplicate short-name copies.
+
 Run `scripts/check-copilot-skills.mjs` with the SDK bundled with the Copilot version being checked. It discovers every bundled skill, so a newly added skill with the incompatible flag fails the check. Keep the upstream synchronization and compatibility changes in separate commits, then push `upstream` and `copilot-cli-compat`.

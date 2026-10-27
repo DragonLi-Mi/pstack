@@ -93,7 +93,7 @@ Don't spend reviewers on an abstract plan. `/interrogate` belongs on a diff. Poi
 For a package or API that other code will use, start with the doc a user would read:
 
 ```text
-/poteto-mode write a tutorial for how i would use the new config package first. then /teach me why it beats the current one.
+/poteto-mode write a tutorial for how i would use the new config package first. then /pstack-teach me why it beats the current one.
 ```
 
 Writing the tutorial first forces the caller's view. You describe the API to a hypothetical user and work back to the implementation. The doc also becomes a concrete target the agent checks its own work against. Name [`/technical-writing`](../../skills/technical-writing/SKILL.md) when the doc itself matters, so a tutorial stays a tutorial instead of drifting into reference and explanation at once.

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -20,13 +20,23 @@ const client = new CopilotClient({
 });
 const normalize = (value) => value.replaceAll("\r\n", "\n").trim();
 const failures = [];
+const competingNames = ["tdd", "teach"];
+const competingRoot = join(baseDirectory, "competing-skills");
 let checked = 0;
 
 try {
+  for (const name of competingNames) {
+    const directory = join(competingRoot, name);
+    await mkdir(directory, { recursive: true });
+    await writeFile(
+      join(directory, "SKILL.md"),
+      `---\nname: ${name}\ndescription: A competing plugin's ${name} skill.\n---\n\n# Competing ${name}\n\nDo not execute a workflow.\n`,
+    );
+  }
   const session = await client.createSession({
     workingDirectory: root,
     availableTools: ["skill"],
-    skillDirectories: [join(root, "skills")],
+    skillDirectories: [competingRoot, join(root, "skills")],
     enableSkills: true,
     enableConfigDiscovery: false,
     enableFileHooks: false,
@@ -35,6 +45,14 @@ try {
   });
   const catalog = await session.rpc.skills.list();
   const commands = await session.rpc.commands.list();
+  for (const name of competingNames) {
+    const expectedPath = join(competingRoot, name, "SKILL.md");
+    const discovered = catalog.skills.find((skill) => skill.name === name);
+    assert.equal(resolve(discovered?.path ?? ""), expectedPath, `${name}: another pack's skill was shadowed`);
+    const loaded = await session.rpc.tools.execute({ name: "skill", arguments: { skill: name } });
+    assert.equal(loaded.resultType, "success", `${name}: another pack's skill stopped loading`);
+    assert.equal(resolve(loaded.skillInvocation?.path ?? ""), expectedPath, `${name}: wrong pack was loaded`);
+  }
   const entries = await readdir(join(root, "skills"), { withFileTypes: true });
   for (const entry of entries.filter((entry) => entry.isDirectory()).sort((a, b) => a.name.localeCompare(b.name))) {
     const text = await readFile(join(root, "skills", entry.name, "SKILL.md"), "utf8");
@@ -67,4 +85,5 @@ try {
 }
 
 console.log(`Skills checked: ${checked}; slash expansions: ${checked}; loader failures: ${failures.length}`);
+console.log(`Competing skills preserved: ${competingNames.length}`);
 assert.equal(failures.length, 0, "Every skill must load after slash expansion without Skill not found.");

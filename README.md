@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <b>Mirror</b> of <a href="https://github.com/cursor/plugins/tree/main/pstack"><code>cursor/plugins/pstack</code></a> — kept in sync for standalone use. Sponsored by Plannotator.
+  <b>Mirror</b> of cursor/plugins/pstack by Poteto — kept in sync for standalone use. Sponsored by Plannotator.
 </p>
 
 <p align="center">

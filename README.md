@@ -41,7 +41,7 @@ The CLI shows every skill in a list you can search. Select the skills you want, 
 
 ### GitHub Copilot CLI compatibility branch
 
-This fork's `copilot-cli-compat` branch includes a skill-loading compatibility patch verified on Copilot CLI 1.0.100 and 1.0.102. It tracks pstack 0.15.30 and covers every bundled skill, including `/poteto-help` and `/statechart`. Register the complete `skills/` directory as standalone skills and use bare command names, without a plugin prefix. See [the Copilot CLI guide](docs/harness/copilot-cli.md) for installation, the loader regression check, validation scope, and the manual-invocation tradeoff.
+This fork's `copilot-cli-compat` branch includes a skill-loading compatibility patch checked on Copilot CLI 1.0.100, 1.0.102, and 1.0.105. It tracks pstack 0.15.36 and covers all 58 bundled skills, including `/poteto-help`, `/statechart`, and `/ketchup-video`. Register the complete `skills/` directory as standalone skills and use bare command names, without a plugin prefix. See [the Copilot CLI guide](docs/harness/copilot-cli.md) for installation, the loader regression check, platform limits, and the manual-invocation tradeoff.
 
 On this branch, use `/pstack-tdd` and `/pstack-teach` for pstack's implementations. The unique names let other packs keep `/tdd` and `/teach` without either implementation being skipped.
 

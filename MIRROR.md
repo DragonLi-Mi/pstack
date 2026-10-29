@@ -51,8 +51,17 @@ Never copy Cursor's files onto `main` directly. That erases the edits.
 
 ## Copilot compatibility branch
 
-After updating `upstream`, merge it into `copilot-cli-compat` without replacing the existing mirror edits. Apply the metadata workaround described in [the Copilot guide](docs/harness/copilot-cli.md) to any new manual-only skills. Keep their workflow bodies unchanged and leave `setup-pstack`'s automatic trigger intact.
+For this fork, the source mirror is `backnotprop/pstack`. Configure its Git URL as the `upstream` remote, fetch it, and merge `upstream/main` to import both Cursor updates and the mirror's fixes. `origin/upstream` is this fork's snapshot branch; fetching it alone does not establish that the source mirror is current.
+
+```bash
+git fetch upstream main upstream
+git merge upstream/main
+```
+
+Whether merging `upstream/main` or updating the Cursor snapshot locally, keep the existing mirror edits on `copilot-cli-compat`. Apply the metadata workaround described in [the Copilot guide](docs/harness/copilot-cli.md) to any new manual-only skills. Keep their workflow bodies unchanged and leave `setup-pstack`'s automatic trigger intact.
 
 This branch names pstack's `tdd` and `teach` skills `pstack-tdd` and `pstack-teach` so other packs can retain the short names. Keep the matching directory names and pstack routing, examples, and links synchronized. Preserve these renames during an upstream merge; do not restore duplicate short-name copies.
 
 Run `scripts/check-copilot-skills.mjs` with the SDK bundled with the Copilot version being checked. It discovers every bundled skill, so a newly added skill with the incompatible flag fails the check. Keep the upstream synchronization and compatibility changes in separate commits, then push `upstream` and `copilot-cli-compat`.
+
+Preserve the macOS/POSIX launchers and executable modes. Keep shared scripts platform-neutral and retain the LF rule for statechart's recorded fixtures, whose parsers and expected output depend on exact line endings.

@@ -1,6 +1,6 @@
 # pstack in GitHub Copilot CLI
 
-This fork's `copilot-cli-compat` branch carries a skill-loading compatibility patch verified on **Copilot CLI 1.0.100 and 1.0.102**. It preserves the standalone mirror's harness-neutral edits and synchronizes Cursor's `pstack/` at commit `eb4db2b55b2b7dec3d9282754cddf0a56bf4ff10` (pstack 0.15.30). The `upstream` branch holds that subtree unchanged; compatibility changes stay on `copilot-cli-compat`.
+This fork's `copilot-cli-compat` branch carries a skill-loading compatibility patch checked on **Copilot CLI 1.0.100, 1.0.102, and 1.0.105**. It preserves the standalone mirror's harness-neutral edits and synchronizes Cursor's `pstack/` at commit `0f77cd5` (pstack 0.15.36), via `backnotprop/pstack` at `25abb38`. Compatibility changes stay on `copilot-cli-compat`, not on the unchanged Cursor subtree branch.
 
 The patch addresses skill loading. It does not implement a new agent runtime or guarantee compatibility with every pstack workflow.
 
@@ -19,6 +19,8 @@ Two separate failure modes were originally reproduced on 1.0.100 using a real Co
 A user-invoked plugin slash command can expand successfully and still be followed by a failing, redundant model-tool lookup. Skill discovery, slash-command expansion, and model-tool lookup are different boundaries.
 
 On 1.0.102, `/poteto-help` reproduced that redundant lookup failure even though its content had already loaded. The previous patch covered only `poteto-mode`. An all-skills check against pstack 0.15.30 reproduced the same failure for **55 of 57 skills**, including the new `statechart`; only `poteto-mode` and `setup-pstack` loaded through the skill tool. After the metadata repair, all 57 bare slash commands expand and all 57 redundant skill-tool lookups succeed.
+
+The 0.15.36 sync adds `ketchup-video`, bringing the catalog to 58 skills. On Copilot CLI 1.0.105, the unchanged metadata of that new skill reproduced one loader failure; the same metadata-only repair makes all 58 expand and load. This check ran on Windows, not on a macOS host.
 
 Related upstream reports:
 - https://github.com/github/copilot-cli/issues/4438
@@ -110,15 +112,15 @@ Run the checked-in regression script with the `index.js` from the SDK bundled wi
 node scripts/check-copilot-skills.mjs <path-to-copilot-sdk/index.js> <path-to-copilot>
 ```
 
-For the standard Windows 1.0.102 package location, in PowerShell:
+For the standard Windows 1.0.105 package location, in PowerShell:
 
 ```powershell
-node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64\1.0.102\copilot-sdk\index.js" (Get-Command copilot).Source
+node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64\1.0.105\copilot-sdk\index.js" (Get-Command copilot).Source
 ```
 
 The script creates a temporary SDK configuration, discovers every bundled skill, expands each bare slash command, and executes the real `skill` tool after that expansion. It checks the complete slash-expansion body and the tool's success, returned skill identity, and workflow heading. Tool-returned content remains subject to normal CLI redaction, including credential examples in `make-bot-ui`; the check does not disable or bypass redaction. It exposes only the skill tool, rejects permission requests, loads no repository configuration or file hooks, sends no inference prompts, and removes its temporary state. It does not register skills globally or change the user's plugins, authentication, or approval settings.
 
-The check also registers fixture skills named `tdd` and `teach` in a second source. It verifies those implementations still load from their own files while all 57 pstack skills expand and load from pstack. Before the collision repair, the real loader resolved a pstack request to the competing `tdd` workflow and the assertion failed. This covers source collisions without depending on which plugins happen to be installed.
+The check also registers fixture skills named `tdd` and `teach` in a second source. It verifies those implementations still load from their own files while all 58 pstack skills expand and load from pstack. Before the collision repair, the real loader resolved a pstack request to the competing `tdd` workflow and the assertion failed. This covers source collisions without depending on which plugins happen to be installed.
 
 Before the repair, this check reported 57 slash expansions and 55 loader failures. After the repair, it reported 57 slash expansions and zero loader failures. Workflow bodies were also compared with the post-sync baseline, normalizing Git checkout line endings. These are loader regressions, not proof that every workflow, model selection, or external tool works.
 
@@ -131,13 +133,25 @@ change files, delegate work, or execute the workflow. Report the actual tool res
 
 Verify the real tool result rather than only the model's prose. Separately check `/poteto-mode` in the session command menu. A successful loader check does not establish coding correctness.
 
-The synchronized `statechart` scripts also have a Node test suite:
+### Statechart and platform scope
+
+The 0.15.36 statechart implementation replaces the old `.mjs` commands with TypeScript. Its core parser and pipeline tests run with Node's TypeScript support on Windows and POSIX hosts. From the repository root, in PowerShell:
 
 ```powershell
-node --test .\skills\statechart\scripts\test\statechart.test.mjs
+node --test .\skills\statechart\scripts\test\chart.test.ts .\skills\statechart\scripts\test\messages.test.ts .\skills\statechart\scripts\test\pipeline.test.ts
 ```
 
-The compatibility branch uses host-native paths in two diagnostic assertions so they match Windows as well as POSIX. TLC-dependent cases require the upstream suite's external prerequisites and otherwise skip.
+The same tests on macOS or another POSIX host:
+
+```sh
+node --test skills/statechart/scripts/test/chart.test.ts skills/statechart/scripts/test/messages.test.ts skills/statechart/scripts/test/pipeline.test.ts
+```
+
+These 67 core tests passed on Windows. The corpus fixtures use LF on every platform; converting them to CRLF changes TLC message parsing and breaks the regression expectations.
+
+All 61 PR-watcher and plan-checker tests also passed on Windows. Their fake `gh` command runs through the current runtime rather than a shell script or a hard-coded PATH separator, so the fixture works with the same test runner on Windows and POSIX. The declared TypeScript check could not run because dependency downloads were unavailable.
+
+The upstream shell launcher and executable modes remain unchanged for macOS/POSIX. The statechart CLI uses `/bin/sh` and POSIX process-group signals; this branch does not claim native Windows end-to-end CLI support. Run the full upstream suite with `npm test` from `skills/statechart/scripts` in a compatible POSIX environment after installing its declared dependencies and external prerequisites. Loader checks and core tests do not establish that the full CLI or renderer works, and this synchronization was not executed on a macOS host.
 
 ## Known limitations
 

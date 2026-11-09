@@ -1,6 +1,6 @@
 # pstack in GitHub Copilot CLI
 
-This fork's `copilot-cli-compat` branch carries a skill-loading compatibility patch checked on **Copilot CLI 1.0.100, 1.0.102, and 1.0.105**. It preserves the standalone mirror's harness-neutral edits and synchronizes Cursor's `pstack/` at commit `0f77cd5` (pstack 0.15.36), via `backnotprop/pstack` at `25abb38`. Compatibility changes stay on `copilot-cli-compat`, not on the unchanged Cursor subtree branch.
+This fork's `copilot-cli-compat` branch carries a skill-loading compatibility patch checked on **Copilot CLI 1.0.100, 1.0.102, 1.0.105, and 1.0.107**. It preserves the standalone mirror's harness-neutral edits and synchronizes Cursor's `pstack/` at commit `0f77cd5` (pstack 0.15.36), via `backnotprop/pstack` at `0b239bb`. Compatibility changes stay on `copilot-cli-compat`, not on the unchanged Cursor subtree branch.
 
 The patch addresses skill loading. It does not implement a new agent runtime or guarantee compatibility with every pstack workflow.
 
@@ -112,10 +112,10 @@ Run the checked-in regression script with the `index.js` from the SDK bundled wi
 node scripts/check-copilot-skills.mjs <path-to-copilot-sdk/index.js> <path-to-copilot>
 ```
 
-For the standard Windows 1.0.105 package location, in PowerShell:
+For the standard Windows 1.0.107 package location, in PowerShell:
 
 ```powershell
-node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64\1.0.105\copilot-sdk\index.js" (Get-Command copilot).Source
+node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64\1.0.107\copilot-sdk\index.js" (Get-Command copilot).Source
 ```
 
 The script creates a temporary SDK configuration, discovers every bundled skill, expands each bare slash command, and executes the real `skill` tool after that expansion. It checks the complete slash-expansion body and the tool's success, returned skill identity, and workflow heading. Tool-returned content remains subject to normal CLI redaction, including credential examples in `make-bot-ui`; the check does not disable or bypass redaction. It exposes only the skill tool, rejects permission requests, loads no repository configuration or file hooks, sends no inference prompts, and removes its temporary state. It does not register skills globally or change the user's plugins, authentication, or approval settings.
@@ -123,6 +123,8 @@ The script creates a temporary SDK configuration, discovers every bundled skill,
 The check also registers fixture skills named `tdd` and `teach` in a second source. It verifies those implementations still load from their own files while all 58 pstack skills expand and load from pstack. Before the collision repair, the real loader resolved a pstack request to the competing `tdd` workflow and the assertion failed. This covers source collisions without depending on which plugins happen to be installed.
 
 Before the repair, this check reported 57 slash expansions and 55 loader failures. After the repair, it reported 57 slash expansions and zero loader failures. Workflow bodies were also compared with the post-sync baseline, normalizing Git checkout line endings. These are loader regressions, not proof that every workflow, model selection, or external tool works.
+
+After merging the source mirror through `0b239bb`, the same check passed on Copilot CLI 1.0.107: all 58 skills expanded and loaded, and both competing skill fixtures retained their own implementations.
 
 For a manual check after installation:
 
@@ -151,7 +153,9 @@ These 67 core tests passed on Windows. The corpus fixtures use LF on every platf
 
 All 61 PR-watcher and plan-checker tests also passed on Windows. Their fake `gh` command runs through the current runtime rather than a shell script or a hard-coded PATH separator, so the fixture works with the same test runner on Windows and POSIX. The declared TypeScript check could not run because dependency downloads were unavailable.
 
-The upstream shell launcher and executable modes remain unchanged for macOS/POSIX. The statechart CLI uses `/bin/sh` and POSIX process-group signals; this branch does not claim native Windows end-to-end CLI support. Run the full upstream suite with `npm test` from `skills/statechart/scripts` in a compatible POSIX environment after installing its declared dependencies and external prerequisites. Loader checks and core tests do not establish that the full CLI or renderer works, and this synchronization was not executed on a macOS host.
+The source mirror now includes native Windows worker shutdown and temporary-directory cleanup, plus CRLF handling for TLC output. The 67 core tests still pass after this synchronization. Ad-hoc checks also compared all 33 recorded DOT graphs under LF and CRLF and exercised six file-line cases, including read-buffer boundaries.
+
+The upstream shell launcher and executable modes remain unchanged for macOS/POSIX. The recorded CLI replay tests still execute their POSIX-shebang Java replacement directly, which fails with `spawn EFTYPE` on Windows. The pre-sync `28798b5` baseline also reproduces that fixture failure. These checks therefore do not establish native Windows end-to-end CLI or renderer support. Run the full upstream suite with `npm test` from `skills/statechart/scripts` in a compatible POSIX environment after installing its declared dependencies and external prerequisites. This synchronization was not executed on a macOS host.
 
 ## Known limitations
 

@@ -1,6 +1,6 @@
 # pstack in GitHub Copilot CLI
 
-This fork's `copilot-cli-compat` branch carries a skill-loading compatibility patch checked on **Copilot CLI 1.0.100, 1.0.102, 1.0.105, and 1.0.107**. It preserves the standalone mirror's harness-neutral edits and synchronizes Cursor's `pstack/` at commit `0f77cd5` (pstack 0.15.36), via `backnotprop/pstack` at `0b239bb`. Compatibility changes stay on `copilot-cli-compat`, not on the unchanged Cursor subtree branch.
+This fork's `copilot-cli-compat` branch carries a skill-loading compatibility patch checked on **Copilot CLI 1.0.100, 1.0.102, 1.0.105, 1.0.107, and 1.0.112**. It preserves the standalone mirror's harness-neutral edits and synchronizes Cursor's `pstack/` at commit `e1cc031` (pstack 0.15.43), via `backnotprop/pstack` at `83a729a`. Compatibility changes stay on `copilot-cli-compat`, not on the unchanged Cursor subtree branch.
 
 The patch addresses skill loading. It does not implement a new agent runtime or guarantee compatibility with every pstack workflow.
 
@@ -81,6 +81,8 @@ The description does not grant additional file, shell, network, or publishing pe
 
 The standalone mirror reads `~/.agents/pstack-models.md` outside Cursor. Keep existing role-to-model choices when migrating settings; do not assume a Cursor `alwaysApply` rule will be loaded by Copilot.
 
+Updating the skills does not require rerunning `/setup-pstack`. Version 0.15.43 still honors settings for active roles, but retires some roles and applies its legacy-default migration if you rerun setup. Review the proposed changes before saving a migrated profile.
+
 Use only models and effort fields actually accepted by the current subagent tool. Cursor-style names with `-xhigh` or `-fast` are not automatically valid Copilot model IDs.
 
 A plain skills-directory installation does not register `agents/*.md` as custom agent types. If `poteto-agent` is unavailable, follow the mirror's Harness fallback: use an available general agent and require it to read the absolute path to `skills/poteto-mode/SKILL.md` in full, including its Principles, before doing the task. This is instruction-level adaptation, not proof that a custom agent type was registered.
@@ -112,10 +114,10 @@ Run the checked-in regression script with the `index.js` from the SDK bundled wi
 node scripts/check-copilot-skills.mjs <path-to-copilot-sdk/index.js> <path-to-copilot>
 ```
 
-For the standard Windows 1.0.107 package location, in PowerShell:
+For the standard Windows 1.0.112 package location, in PowerShell:
 
 ```powershell
-node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64\1.0.107\copilot-sdk\index.js" (Get-Command copilot).Source
+node .\scripts\check-copilot-skills.mjs "$env:LOCALAPPDATA\copilot\pkg\win32-x64\1.0.112\copilot-sdk\index.js" (Get-Command copilot).Source
 ```
 
 The script creates a temporary SDK configuration, discovers every bundled skill, expands each bare slash command, and executes the real `skill` tool after that expansion. It checks the complete slash-expansion body and the tool's success, returned skill identity, and workflow heading. Tool-returned content remains subject to normal CLI redaction, including credential examples in `make-bot-ui`; the check does not disable or bypass redaction. It exposes only the skill tool, rejects permission requests, loads no repository configuration or file hooks, sends no inference prompts, and removes its temporary state. It does not register skills globally or change the user's plugins, authentication, or approval settings.
@@ -125,6 +127,8 @@ The check also registers fixture skills named `tdd` and `teach` in a second sour
 Before the repair, this check reported 57 slash expansions and 55 loader failures. After the repair, it reported 57 slash expansions and zero loader failures. Workflow bodies were also compared with the post-sync baseline, normalizing Git checkout line endings. These are loader regressions, not proof that every workflow, model selection, or external tool works.
 
 After merging the source mirror through `0b239bb`, the same check passed on Copilot CLI 1.0.107: all 58 skills expanded and loaded, and both competing skill fixtures retained their own implementations.
+
+The pstack 0.15.43 sync gave the same loader results on Copilot CLI 1.0.112.
 
 For a manual check after installation:
 
